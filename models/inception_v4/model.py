@@ -15,9 +15,9 @@ class InceptionV4:
         
         # load config
         with open(config) as f:
-            self.__config = json.load(f)
+            self._config = json.load(f)
 
-        self.__load_model(num_classes, pretrained)
+        self._load_model(num_classes, pretrained)
         
         # Set model to eval mode
         self._model.cuda()
@@ -37,7 +37,7 @@ class InceptionV4:
         """
         print(summary(self._model, input_size=(3, 299, 299)))
 
-    def __load_model(self, num_classes: int, pretrained: str) -> None:
+    def _load_model(self, num_classes: int, pretrained: str) -> None:
         """Creates the inceptionv4 model and loads state dict.
 
         Args:
@@ -45,7 +45,7 @@ class InceptionV4:
             pretrained (bool): If True, returns a model pre-trained on ImageNet. 
         """
         if pretrained:
-            settings = self.__config['inceptionv4'][pretrained]
+            settings = self._config['inceptionv4'][pretrained]
 
             if num_classes != settings['num_classes']:
                 raise ValueError(f'num_classes should be {settings["num_classes"]}, but is {num_classes}')
