@@ -47,6 +47,10 @@ class Model:
         elif model_name == "Inceptionv4":
             from models.inception_v4 import InceptionV4
             self._model = InceptionV4().model
+        elif model_name == "WideResnet":
+            from models.resnet import WideResnet
+            self._model = WideResnet().model
+            
 
     def generate_weights(self, opt: argparse.Namespace) -> None:
         """Convert torch weights format to wts weights format

@@ -1,6 +1,6 @@
 # torchtrtz
 
-This project is mainly used t generate tensorrt weights for [makaveli10/cpptensorrtz](https://github.com/makaveli10/cpptensorrtz)
+This project is mainly used to generate tensorrt weights for [makaveli10/cpptensorrtz](https://github.com/makaveli10/cpptensorrtz)
 
 
 ## Getting Started
