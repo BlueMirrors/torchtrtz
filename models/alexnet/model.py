@@ -15,7 +15,7 @@ class AlexNet(Model):
         """Initialize AlexNet model.
         """
         # setup
-        super().__init__(model=alexnet(pretrained=False))
+        super().__init__(model=alexnet(pretrained=True))
 
 
 if __name__ == "__main__":
