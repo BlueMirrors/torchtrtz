@@ -8,68 +8,67 @@ import inception
 class InceptionV4:
     """Loads Inceptionv4 model.
     """
-    def __init__(self, num_classes=1000, config='config.json', pretrained='imagenet') -> None:
+    def __init__(self,
+                 num_classes=1000,
+                 config='config.json',
+                 pretrained='imagenet') -> None:
         """Initialize inception v4 model
         """
-        self._model = None
-        
         # load config
+        config = None
         with open(config) as f:
-            self._config = json.load(f)
+            config = json.load(f)
 
-        self._load_model(num_classes, pretrained)
-        
-        # Set model to eval mode
-        self._model.cuda()
-        self._model.eval()
+        inception_model = self.load_model(num_classes, pretrained, config)
 
-    @property
-    def model(self) -> nn.Module:
-        """Getter for the model
+        super().__init__(model=inception_model, input_size=(3, 299, 299))
 
-        Returns:
-            nn.Module: torch model
-        """
-        return self._model
-
-    def print_summary(self) -> None:
-        """Print summary of the model.
-        """
-        print(summary(self._model, input_size=(3, 299, 299)))
-
-    def _load_model(self, num_classes: int, pretrained: str) -> None:
+    @staticmethod
+    def load_model(self, num_classes: int, pretrained: str,
+                   config: dict) -> inception.Inception_v4:
         """Creates the inceptionv4 model and loads state dict.
 
         Args:
             num_classes (int): number of classes in the classifier
-            pretrained (bool): If True, returns a model pre-trained on ImageNet. 
+            pretrained (str): If True, returns a model pre-trained on ImageNet.
+            config (dict): Configurations for setting up model.
+        Raises:
+            ValueError: raised if num classes don't match with the settings.
+
+        Returns:
+            inception.Inception_v4: loaded Inception model
         """
+
+        model = None
         if pretrained:
-            settings = self._config['inceptionv4'][pretrained]
+            settings = config['inceptionv4'][pretrained]
 
             if num_classes != settings['num_classes']:
-                raise ValueError(f'num_classes should be {settings["num_classes"]}, but is {num_classes}')
+                raise ValueError(
+                    f'num_classes should be {settings["num_classes"]}, but is {num_classes}'
+                )
 
             # both 'imagenet'&'imagenet+background' are loaded from same parameters
-            self._model = inception.Inception_v4(num_classes=1001)
-            self._model.load_state_dict(model_zoo.load_url(settings['url']))
+            model = inception.Inception_v4(num_classes=1001)
+            model.load_state_dict(model_zoo.load_url(settings['url']))
 
             if pretrained == 'imagenet':
                 new_last_linear = nn.Linear(1536, 1000)
-                new_last_linear.weight.data = self._model.last_linear.weight.data[1:]
-                new_last_linear.bias.data = self._model.last_linear.bias.data[1:]
-                self._model.last_linear = new_last_linear
+                new_last_linear.weight.data = model.last_linear.weight.data[1:]
+                new_last_linear.bias.data = model.last_linear.bias.data[1:]
+                model.last_linear = new_last_linear
 
-            self._model.input_space = settings['input_space']
-            self._model.input_size = settings['input_size']
-            self._model.input_range = settings['input_range']
-            self._model.mean = settings['mean']
-            self._model.std = settings['std']
+            model.input_space = settings['input_space']
+            model.input_size = settings['input_size']
+            model.input_range = settings['input_range']
+            model.mean = settings['mean']
+            model.std = settings['std']
         else:
-            self._model = inception.Inception_v4(num_classes=num_classes)
+            model = inception.Inception_v4(num_classes=num_classes)
+
+        return model
 
 
 if __name__ == '__main__':
     net = InceptionV4(num_classes=1000, pretrained='imagenet')
     print(net.model)
-    
