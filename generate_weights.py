@@ -28,7 +28,7 @@ def load_model(model_name: str) -> Model:
         model = AlexNet()
     elif model_name == "Inceptionv4":
         from models.inception_v4 import InceptionV4
-        model = InceptionV4()
+        model = InceptionV4(config='models/inception_v4/config.json')
     elif model_name == "WideResnet":
         from models.resnet import WideResnet
         model = WideResnet()
