@@ -2,10 +2,12 @@ import json
 import torch.utils.model_zoo as model_zoo
 from torch import nn
 
-import inception
+from models.base_model import Model
+
+from . import inception
 
 
-class InceptionV4:
+class InceptionV4(Model):
     """Loads Inceptionv4 model.
     """
     def __init__(self,
@@ -15,8 +17,7 @@ class InceptionV4:
         """Initialize inception v4 model
         """
         # load config
-        config = None
-        with open(config) as f:
+        with open(config, 'r') as f:
             config = json.load(f)
 
         inception_model = self.load_model(num_classes, pretrained, config)
@@ -24,7 +25,7 @@ class InceptionV4:
         super().__init__(model=inception_model, input_size=(3, 299, 299))
 
     @staticmethod
-    def load_model(self, num_classes: int, pretrained: str,
+    def load_model(num_classes: int, pretrained: str,
                    config: dict) -> inception.Inception_v4:
         """Creates the inceptionv4 model and loads state dict.
 
