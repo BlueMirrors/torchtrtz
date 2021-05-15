@@ -40,6 +40,7 @@ if __name__ == "__main__":
     parser.add_argument(
         '--model',
         type=str,
+        default='VGG16',
         help=
         'state the model name (along with layer information) based on the README file'
     )
